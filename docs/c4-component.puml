@@ -1,0 +1,47 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Component.puml
+
+SystemDb_Ext(queue, "Queue", "redis stream, kafka, sqs")
+SystemDb_Ext(cache, "Cache", "redis")
+SystemDb_Ext(database, "Database", "mongo, postgres, cassandra")
+
+System_Boundary(data_intensive_app, "Data Intensive Architecture") {
+
+    Container_Boundary(c_shared, "Shared") {
+        Component(core, "Core Domain", "core business logic, interfaces, use cases, entities")
+        Component(repositories, "Repositories / Services", "aggregate business logic, fetch and save data")
+
+        Component(db_client, "Database Client", "talks to Database")
+        Component(cache_client, "Cache Client", "talks to Cache")
+        Component(queue_client, "Queue Client", "talks to Queue")
+
+        core -down--> repositories : Interfaces
+        repositories -down--->db_client : Interfaces
+        repositories -down--->cache_client : Interfaces
+        repositories -down--->queue_client : Interfaces
+
+        db_client -down-->database
+        cache_client -down-->cache
+        queue_client -down-->queue
+    }
+
+    Container_Boundary(c_api, "[artifact] API") {
+        Component(server, "Server", "http server")
+        Component(handlers, "Handlers", "http input")
+
+        server -down-> handlers : Serves
+        handlers ---> core : Enqueue InMemory
+    }
+
+    Container_Boundary(c_consumers, "[artifact] Consumers") {
+        Component(workers, "Workers", "concurrent background jobs")
+        Component(consumers, "Consumers", "ETL, extract, transform, load")
+
+        workers -down->consumers: Initiates [N]
+        consumers --->core:  Dequeue, Persists
+
+    }
+
+}
+
+@enduml
