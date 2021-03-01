@@ -63,6 +63,14 @@ data-intensive APIs
   > - Available memory and garbage collection effectiveness (cleaning more space than it's being written)
   > - How complex queries in DB behave during stress, if writing under stress impacts reading
 
+- Auto Scaling (Horizontal)
+  > - By observing the system metrics, specially  under stress with load testing,
+  > it will be possible to establish the thresholds for auto scaling:
+  > - Eg.: Add 2 units when CPU > 100% for 30 seconds.
+  > - Eg.: Decrease 2 units when CPU is 50% idle for 30 seconds.
+  > - It's important to fine tune these numbers and consider the uptime required to add units,
+  > in case of a bursts of requests, the system might become unavailable before the up-scaling finishes
+
 - Flexible architecture
   > - Strong contracts to easily replace less performant pieces and dependencies by more optimized
 
