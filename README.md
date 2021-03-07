@@ -35,6 +35,15 @@ data-intensive APIs
   > there must be mechanisms in place to guarantee consistency, regardless of the executions
   > - Use flags, timestamps, acknowledge messages ensure consistency
 
+- Atomicity and Eventual Consistency
+  > - When you have to update some data in multiple layers of your system, eg:
+  > cache, database, search index, you them all to succeed or fail, so that you don't have
+  > inconsistency between the layers.
+  > - Deal with updates as messages, send the messages to a "queue" and have consumers for each layer to
+  > read the messages and process, if it fails, the message will still be there.
+  > - Eventually, all layers will be updated, distributed.
+  > - Flag messages with UUIDs to track them in the flow, set order and handle duplication.
+
 - Load balancing:
   > - One consumer cannot have it's performance degraded while another is idle
   > - Messages should be distributed evenly between queue groups / streams
