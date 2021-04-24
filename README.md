@@ -58,6 +58,7 @@ data-intensive APIs
   > - Circuit breakers can be implemented to automatically identify dependencies that are unhealthy
   > and toggle fallbacks, they can redo when the dependencies are healthy again (auto-healing)
   > - Send messages that cannot be processed to a dead letter queue to avoid data-loss
+  > - "Graceful Shutdown / Restart" to avoid abrupt exiting to cause inconsistency (data left unprocessed, pending)
 
 - Observability:
   > - Track metrics to understand how the system is behaving
