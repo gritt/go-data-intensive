@@ -1,0 +1,23 @@
+@startuml "Search Indexer Consumer - Sequence Diagram"
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Run -> Extract
+Extract -> RedisStream: fetch links from redis stream
+Extract <-- RedisStream: [list of links]
+Extract -> HttpClient: get webpage data by link
+Extract <-- HttpClient: [raw html]
+Run <-- Extract: [list of jobs]
+
+Run -> Transform
+Transform -> Parser: parse job to webpage
+Transform <-- Parser: [webpage struct]
+Run <-- Transform: [list of webpages]
+
+Run -> Load
+Load -> SearchIndex: save webpages to index, elk
+Load -> RedisStream: add ref links to redis stream
+Run <-- Load: [done]
+
+@enduml
