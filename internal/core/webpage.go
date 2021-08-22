@@ -4,6 +4,7 @@ import "net/url"
 
 type WebPage struct {
 	ID       int
+	ParentID int
 	Name     string
 	URL      url.URL
 	Links    []url.URL
