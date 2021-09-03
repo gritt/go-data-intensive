@@ -37,7 +37,7 @@ func ParseLinks(html string) (links []link) {
 		links = append(links, link{name: name, url: hrefURL})
 	}
 
-	return []link{}
+	return
 }
 
 func hrefTags(html string) []string {
@@ -77,11 +77,11 @@ func hrefToName(hrefTag string) (string, error) {
 		return "", err
 	}
 
-	name := parser.FindString(hrefTag)
-	if len(name) == 0 {
+	data := parser.FindSubmatch([]byte(hrefTag))
+	if len(data) < 2 {
 		return "", errors.New("some err")
 	}
-	name = strings.TrimSpace(name)
+	name := strings.TrimSpace(string(data[1]))
 
 	return name, nil
 }
