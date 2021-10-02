@@ -13,13 +13,13 @@ type link struct {
 }
 
 func ParseLinks(html string) (links []link) {
-	hrefs := hrefTags(html)
-	if len(hrefs) == 0 {
+	tags := hyperlinkTags(html)
+	if len(tags) == 0 {
 		return
 	}
 
-	for _, href := range hrefs {
-		hrefURL, err := hrefToURL(href)
+	for _, hyperlink := range tags {
+		hrefURL, err := hyperlinkToURL(hyperlink)
 		if err != nil {
 			// TODO log err
 			continue
@@ -28,7 +28,7 @@ func ParseLinks(html string) (links []link) {
 			// TODO log warn
 			continue
 		}
-		name, err := hrefToName(href)
+		name, err := hyperlinkToName(hyperlink)
 		if err != nil {
 			// TODO log err
 			continue
@@ -40,7 +40,7 @@ func ParseLinks(html string) (links []link) {
 	return
 }
 
-func hrefTags(html string) []string {
+func hyperlinkTags(html string) []string {
 	parser, err := regexp.Compile(`(<a .*?href=.*?"(.*?)"(.|\n)*?>((.|\n)*?)<.*?/a.*?>)`)
 	if err != nil {
 		return []string{}
@@ -48,7 +48,7 @@ func hrefTags(html string) []string {
 	return parser.FindAllString(html, len(html))
 }
 
-func hrefToURL(hrefTag string) (url.URL, error) {
+func hyperlinkToURL(hrefTag string) (url.URL, error) {
 	parser, err := regexp.Compile(`(href\s*=\s*(?:"|')(.*?)(?:"|'))`)
 	if err != nil {
 		return url.URL{}, err
@@ -71,7 +71,7 @@ func hrefToURL(hrefTag string) (url.URL, error) {
 	return *hrefURL, nil
 }
 
-func hrefToName(hrefTag string) (string, error) {
+func hyperlinkToName(hrefTag string) (string, error) {
 	parser, err := regexp.Compile(`<a.*?>\s*(.*?)\s*</a>`)
 	if err != nil {
 		return "", err
