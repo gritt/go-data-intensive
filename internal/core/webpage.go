@@ -8,5 +8,4 @@ type WebPage struct {
 	Name     string
 	URL      url.URL
 	Links    []url.URL
-	Keywords []string
 }
