@@ -21,16 +21,13 @@ func ParseLinks(html string) (links []link) {
 	for _, hyperlink := range tags {
 		hrefURL, err := hyperlinkToURL(hyperlink)
 		if err != nil {
-			// TODO log err
 			continue
 		}
 		if !isValidURL(hrefURL) {
-			// TODO log warn
 			continue
 		}
 		name, err := hyperlinkToName(hyperlink)
 		if err != nil {
-			// TODO log err
 			continue
 		}
 
@@ -43,6 +40,7 @@ func ParseLinks(html string) (links []link) {
 func hyperlinkTags(html string) []string {
 	parser, err := regexp.Compile(`(<a .*?href=.*?"(.*?)"(.|\n)*?>((.|\n)*?)<.*?/a.*?>)`)
 	if err != nil {
+		// TODO log err
 		return []string{}
 	}
 	return parser.FindAllString(html, len(html))
@@ -51,11 +49,13 @@ func hyperlinkTags(html string) []string {
 func hyperlinkToURL(hrefTag string) (url.URL, error) {
 	parser, err := regexp.Compile(`(href\s*=\s*(?:"|')(.*?)(?:"|'))`)
 	if err != nil {
+		// TODO log err
 		return url.URL{}, err
 	}
 
 	hrefAttribute := parser.Find([]byte(hrefTag))
 	if len(hrefAttribute) == 0 {
+		// TODO log err
 		return url.URL{}, err
 	}
 
@@ -65,6 +65,7 @@ func hyperlinkToURL(hrefTag string) (url.URL, error) {
 
 	hrefURL, err := url.Parse(hrefValue)
 	if err != nil {
+		// TODO log err
 		return url.URL{}, err
 	}
 
@@ -74,11 +75,13 @@ func hyperlinkToURL(hrefTag string) (url.URL, error) {
 func hyperlinkToName(hrefTag string) (string, error) {
 	parser, err := regexp.Compile(`<a.*?>\s*(.*?)\s*</a>`)
 	if err != nil {
+		// TODO log err
 		return "", err
 	}
 
 	data := parser.FindSubmatch([]byte(hrefTag))
 	if len(data) < 2 {
+		// TODO log err
 		return "", errors.New("some err")
 	}
 	name := strings.TrimSpace(string(data[1]))
