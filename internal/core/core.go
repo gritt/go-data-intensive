@@ -58,6 +58,5 @@ type (
 	Messenger interface {
 		Read(ctx context.Context, limit int) ([]Message, error)
 		Write(ctx context.Context, msg Message) error
-		Delete(ctx context.Context, msg Message) error
 	}
 )

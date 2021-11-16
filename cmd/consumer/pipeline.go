@@ -35,7 +35,7 @@ func NewIndexingPipeline(cfg IndexingConfig, m core.Messenger, i core.Indexer) *
 }
 
 func (p *IndexingPipeline) Extract(ctx context.Context) ([]core.Message, error) {
-	return p.messenger.Read(ctx, 50)
+	return p.messenger.Read(ctx, 2)
 }
 
 func (p *IndexingPipeline) Transform(ctx context.Context, msgs []core.Message) ([]core.WebPage, error) {
@@ -45,13 +45,13 @@ func (p *IndexingPipeline) Transform(ctx context.Context, msgs []core.Message) (
 	webpages := []core.WebPage{}
 
 	// non blocking - concurrency
-	for i := 1; i < p.config.NumberOfWorkers; i++ {
+	for i := 0; i < p.config.NumberOfWorkers; i++ {
 		go func() {
+
 			// read jobs until pending channel is empty
 			for message := range pendingJobs {
 
-				// message is processing
-				fmt.Printf("processing: %s \n", message.UUID)
+				fmt.Printf("→: %s \n", message.UUID)
 
 				webpage, err := p.indexer.Process(ctx, message.Data)
 				if err != nil {
@@ -62,7 +62,6 @@ func (p *IndexingPipeline) Transform(ctx context.Context, msgs []core.Message) (
 					time.Sleep(time.Second * 1)
 				}
 
-				// message was processed
 				completedJobs <- message
 			}
 		}()
@@ -77,7 +76,7 @@ func (p *IndexingPipeline) Transform(ctx context.Context, msgs []core.Message) (
 	// blocking / log finished jobs
 	for r := 1; r <= len(msgs); r++ {
 		msg := <-completedJobs
-		fmt.Printf("job %s  ✔ \n", msg.UUID)
+		fmt.Printf("✔: %s \n", msg.UUID)
 	}
 	close(completedJobs)
 

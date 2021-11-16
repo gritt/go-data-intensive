@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gritt/go-data-intensive/internal/core"
+	"github.com/gritt/go-data-intensive/internal/details/kafka"
 	"github.com/gritt/go-data-intensive/internal/service"
 )
 
@@ -23,11 +24,11 @@ func main() {
 	}()
 
 	wg.Wait()
-	fmt.Println("main finished!")
+	fmt.Println("main exited gracefully!")
 }
 
 func initializeIndexingConsumers(ctx context.Context) {
-	numberOfWorkers := 5
+	numberOfWorkers := 1
 
 	var wg sync.WaitGroup
 	wg.Add(numberOfWorkers)
@@ -41,23 +42,39 @@ func initializeIndexingConsumers(ctx context.Context) {
 }
 
 func newIndexingConsumer(number int) Consumer {
-	// TODO read envs...
-	// TODO initialize dependencies...
+	kafka := newKafkaClient()
 
-	messenger := service.NewMessenger()
+	messenger := service.NewMessenger(kafka)
+
 	searchIndex := core.NewSearchIndex()
 
-	pipelineConfig := IndexingConfig{NumberOfWorkers: 10}
-	pipeline := NewIndexingPipeline(
-		pipelineConfig,
-		messenger,
-		searchIndex,
-	)
+	pipeline := newIndexingPipeline(messenger, searchIndex)
 
 	consumerConfig := Config{
 		Name:     "indexing",
 		UUID:     strconv.Itoa(number),
-		Interval: 3 * time.Second,
+		Interval: 10 * time.Millisecond,
 	}
 	return NewConsumer(consumerConfig, pipeline)
+}
+
+func newKafkaClient() *kafka.Client {
+	// TODO read from env
+	cfg := kafka.Config{
+		MaxRetries: 3,
+		Host:       "localhost:9092",
+		Topic:      "test",
+		Partition:  int32(0),
+	}
+
+	return kafka.NewClient(cfg)
+}
+
+func newIndexingPipeline(m core.Messenger, i core.Indexer) *IndexingPipeline {
+	// TODO read from env
+	cfg := IndexingConfig{
+		NumberOfWorkers: 10,
+	}
+
+	return NewIndexingPipeline(cfg, m, i)
 }

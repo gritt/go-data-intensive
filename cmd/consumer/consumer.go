@@ -50,12 +50,12 @@ func (c Consumer) Run(ctx context.Context, wg *sync.WaitGroup) {
 	}()
 
 	for {
-		msgs, err := c.pipeline.Extract(ctx)
+		messages, err := c.pipeline.Extract(ctx)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
 
-		webpages, err := c.pipeline.Transform(ctx, msgs)
+		webpages, err := c.pipeline.Transform(ctx, messages)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
