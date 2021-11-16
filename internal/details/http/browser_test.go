@@ -2,6 +2,7 @@ package http
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -13,6 +14,8 @@ import (
 )
 
 func TestGetContents(t *testing.T) {
+	ctx := context.TODO()
+
 	givenURL := url.URL{
 		Scheme: "http",
 		Host:   "localhost",
@@ -28,7 +31,7 @@ func TestGetContents(t *testing.T) {
 			browser := NewBrowser(mockHttpClient)
 
 			// when
-			contents, err := browser.GetContents(givenURL)
+			contents, err := browser.GetContents(ctx, givenURL)
 
 			// then
 			assert.Empty(t, contents)
@@ -51,7 +54,7 @@ func TestGetContents(t *testing.T) {
 			browser := NewBrowser(mockHttpClient)
 
 			// when
-			contents, err := browser.GetContents(givenURL)
+			contents, err := browser.GetContents(ctx, givenURL)
 
 			// then
 			assert.Empty(t, contents)
@@ -74,7 +77,7 @@ func TestGetContents(t *testing.T) {
 			browser := NewBrowser(mockHttpClient)
 
 			// when
-			contents, err := browser.GetContents(givenURL)
+			contents, err := browser.GetContents(ctx, givenURL)
 
 			// then
 			assert.Empty(t, contents)
@@ -98,7 +101,7 @@ func TestGetContents(t *testing.T) {
 			browser := NewBrowser(mockHttpClient)
 
 			// when
-			contents, err := browser.GetContents(givenURL)
+			contents, err := browser.GetContents(ctx, givenURL)
 
 			// then
 			assert.Empty(t, contents)
@@ -119,7 +122,7 @@ func TestGetContents(t *testing.T) {
 			browser := NewBrowser(mockHttpClient)
 
 			// when
-			contents, err := browser.GetContents(givenURL)
+			contents, err := browser.GetContents(ctx, givenURL)
 
 			// then
 			assert.NoError(t, err)

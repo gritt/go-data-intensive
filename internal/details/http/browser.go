@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -24,7 +25,7 @@ func NewBrowser(client HTTPClient) *Browser {
 	}
 }
 
-func (b Browser) GetContents(url url.URL) (string, error) {
+func (b Browser) GetContents(ctx context.Context, url url.URL) (string, error) {
 	resp, err := b.Client.Get(url.String())
 	if err != nil {
 		return "", fmt.Errorf("request error: %w", err)
