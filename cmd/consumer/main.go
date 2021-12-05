@@ -43,7 +43,6 @@ func initializeIndexingConsumers(ctx context.Context) {
 
 func newIndexingConsumer(number int) Consumer {
 	kafka := newKafkaClient()
-
 	messenger := service.NewMessenger(kafka)
 
 	searchIndex := core.NewSearchIndex()
@@ -73,7 +72,7 @@ func newKafkaClient() *kafka.Client {
 func newIndexingPipeline(m core.Messenger, i core.Indexer) *IndexingPipeline {
 	// TODO read from env
 	cfg := IndexingConfig{
-		NumberOfWorkers: 10,
+		NumberOfWorkers: 100,
 	}
 
 	return NewIndexingPipeline(cfg, m, i)

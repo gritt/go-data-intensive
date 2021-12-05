@@ -5,6 +5,7 @@ import (
 	"net/url"
 )
 
+// TODO, if it changes it breaks
 // Statuses for messages
 const (
 	JOB_PENDING = iota

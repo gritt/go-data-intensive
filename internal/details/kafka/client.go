@@ -75,6 +75,7 @@ func (c *Client) ConsumeMessages() []string {
 			fmt.Println("Error", err.Error())
 
 		case msg := <-consumerPartition.Messages():
+			// mutex for two consumer to update the last offset
 			if msg.Offset != c.lastOffset {
 				data = append(data, string(msg.Value))
 				c.lastOffset = msg.Offset
@@ -84,3 +85,26 @@ func (c *Client) ConsumeMessages() []string {
 		}
 	}
 }
+
+// event ordering, event time
+// XTDB, help maitain context of order
+
+// consumer shuts down
+
+// race conditions
+
+// msg 5 failed msg 6 succeed (?)
+// proccess sigle offset (depending o retention period)
+
+// how can you go to last read offset
+
+// TODO move away from queue style for event style
+
+// TODO error handling
+// TODO channel for failed jobs
+// TODO retry logic
+
+// TODO fallback
+// Just find which ofset was failed
+
+// TODO circuit breaker

@@ -8,12 +8,6 @@ import (
 	"github.com/gritt/go-data-intensive/internal/core"
 )
 
-// TODO error handling
-// TODO channel for failed jobs
-// TODO retry logic
-// TODO fallback / dead letter queue / no ack
-// TODO circuit breaker
-
 type (
 	IndexingConfig struct {
 		NumberOfWorkers int

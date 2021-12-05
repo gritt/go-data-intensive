@@ -3,12 +3,21 @@
 The purpose of this project is to study in practice some of the key attributes that make 
 data-intensive APIs
 
-### Attributes
+### Some attributes of data intensive
 
 - High volume of traffic, thousands requests per second
-- High volume of data being written
-- High volume of data processing/indexing
-- High volume of data changing/updated
+- High volume of data being written or read
+- High volume of data processing like indexing
+- High volume of data being frequently updated
+
+### Common functional requirements
+
+- Consistency
+- Latency
+- Scalability
+
+- Check more ilities in Neil book:
+> (Ilities)
 
 ### Notes
 
