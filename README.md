@@ -10,7 +10,7 @@ data-intensive APIs
 - High volume of data processing like indexing
 - High volume of data being frequently updated
 
-### Common functional requirements
+### Common non-functional requirements
 
 - Consistency
 - Latency
